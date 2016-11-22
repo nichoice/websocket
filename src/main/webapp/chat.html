@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>...</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<style>
+</style>
+</head>
+<body>
+	<div>
+        <textarea name="text" id="text"  rows="3" cols="20"></textarea>
+		<input type="submit" value="send" onclick="start()" />
+	</div>
+	
+	<button id="aa" value="">debug</button>
+	<button id="bb">bb</button>
+	<button id="cc">cc</button>
+	<button id="dd">dd</button>
+	<button id="ee">ee</button>
+	<button id="ff">ff</button>
+	<div id="messages"></div>
+<script type="text/javascript">
+		var webSocket = 
+			new WebSocket('ws://localhost:8080/com-byteslounge-websockets/websocket');
+
+		webSocket.onerror = function(event) {
+			onError(event)
+		};
+
+		webSocket.onopen = function(event) {
+			onOpen(event)
+		};
+
+		webSocket.onmessage = function(event) {
+			onMessage(event)
+		};
+
+		function onMessage(event) {
+			document.getElementById('messages').innerHTML 
+				+= '<br />' + event.data;
+		}
+
+		function onOpen(event) {
+			document.getElementById('messages').innerHTML 
+				= 'Connection established';
+		}
+
+		function onError(event) {
+			alert(event.data);
+		}
+
+		function start() {
+            var text =document.getElementById('text').value;
+			webSocket.send(text);
+			return false;
+		}
+		$(document).ready(function(){
+			$("#aa").click(function(){
+				var aa = $("#aa").val();
+				console.log(aa);
+				$("#text").val(aa);
+				//console.log($("#text").val());
+				webSocket.send($("#text").val());
+			});
+		})
+	</script>
+</body>
+</html>
